@@ -86,7 +86,7 @@ public class ProductCategoryService {
                 ProductCategory productCategory2 = productCategoryRepository.save(productCategory1);
                 BeanUtils.copyProperties(productCategory2, productCategoryDto);
             productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
-            productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).productCategoryDetails(productCategory.getCategoryId())).withSelfRel());
+            productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).productCategoryDetails(productCategory2.getCategoryId())).withSelfRel());
             return productCategoryDto;
         }catch (Exception e){
             throw new ProductCategoryNotFoundException(productCategoryId);
