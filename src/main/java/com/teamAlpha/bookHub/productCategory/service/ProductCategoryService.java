@@ -1,71 +1,97 @@
 package com.teamAlpha.bookHub.productCategory.service;
 
+import com.teamAlpha.bookHub.productCategory.controller.ProductCategoryController;
 import com.teamAlpha.bookHub.productCategory.entity.ProductCategory;
+import com.teamAlpha.bookHub.productCategory.exception.ProductCategoryNotFoundException;
+import com.teamAlpha.bookHub.productCategory.model.ProductCategoryDto;
 import com.teamAlpha.bookHub.productCategory.repository.ProductCategoryRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
 import java.util.Objects;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class ProductCategoryService {
     @Autowired
     ProductCategoryRepository productCategoryRepository;
 
+    public ProductCategoryDto createProductCategory (ProductCategory productCategory){
+        ProductCategoryDto productCategoryDto = new ProductCategoryDto();
+        ProductCategory productCategory1 = productCategoryRepository.save(productCategory);
+        BeanUtils.copyProperties(productCategory1, productCategoryDto);
 
-    public Boolean idExist(Integer productCategoryId){
-        return productCategoryRepository.existsById(productCategoryId);
+        productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
+        productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).productCategoryDetails(productCategory.getCategoryId())).withSelfRel());
+        return productCategoryDto;
     }
 
-    public ProductCategory findProductCategory(Integer productCategoryId){
-        return productCategoryRepository.findById(productCategoryId).get();
+    public ProductCategoryDto productCategoryDetail(Integer productCategoryId) throws ProductCategoryNotFoundException {
+        try{
+
+            ProductCategoryDto productCategoryDto = new ProductCategoryDto();
+            ProductCategory productCategory = productCategoryRepository.findById(productCategoryId).get();
+            System.out.println(productCategory);
+            BeanUtils.copyProperties(productCategory,productCategoryDto);
+            productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
+            return productCategoryDto;
+
+        }catch (Exception e){
+            throw new ProductCategoryNotFoundException(productCategoryId);
+        }
     }
 
-    public ProductCategory createProductCategory (ProductCategory productCategory){
-        return productCategoryRepository.save(productCategory);
-    }
+
 
     public List<ProductCategory> getAllProductCategory (){
-        return productCategoryRepository.findAll();
+        ProductCategoryDto productCategoryDto = new ProductCategoryDto();
+        List<ProductCategory> listCategory = productCategoryRepository.findAll();
+        return listCategory;
+    }
+
+    public String deleteProductCategory(Integer productCategoryId) throws ProductCategoryNotFoundException {
+
+        try{
+            productCategoryRepository.findById(productCategoryId).get();
+            productCategoryRepository.deleteById(productCategoryId);
+            return("Successfully delete product category" + productCategoryId + " Id ");
+
+        }catch (Exception e){
+            throw new ProductCategoryNotFoundException(productCategoryId);
+        }
 
     }
 
-    public void deleteProductCategory(Integer productCategoryId) throws Exception {
-        boolean isValid = idExist(productCategoryId);
-        if(!isValid){
-            throw new Exception("Product category with "+ productCategoryId+ " Id does not exist");
-        }
-        productCategoryRepository.deleteById(productCategoryId);
-    }
+    public ProductCategoryDto updateProductCategoryDetails(Integer productCategoryId, ProductCategory productCategory) throws ProductCategoryNotFoundException {
 
-    public ProductCategory productCategoryDetail(Integer productCategoryId) throws Exception {
-        boolean isValid = idExist(productCategoryId);
-        if(!isValid){
-            throw new Exception("Product category with "+ productCategoryId + " Id does not exist");
-        }
-        return findProductCategory(productCategoryId);
-    }
+        try{
+            ProductCategory productCategory1 = productCategoryRepository.findById(productCategoryId).get();
+            ProductCategoryDto productCategoryDto = new ProductCategoryDto();
 
+                if(Objects.nonNull(productCategory.getCategoryName())&& !"".equalsIgnoreCase(productCategory.getCategoryName())){
+                    productCategory1.setCategoryName(productCategory.getCategoryName());
+                }
+                if(Objects.nonNull(productCategory.getDescription())&& !"".equalsIgnoreCase(productCategory.getDescription())){
+                    productCategory1.setDescription(productCategory.getDescription());
+                }
+                if(Objects.nonNull(productCategory.getShopId())){
+                    productCategory1.setShopId(productCategory.getShopId());
+                }
 
-    public ProductCategory updateProductCategoryDetails(Integer productCategoryId, ProductCategory productCategory) throws Exception {
-         productCategoryRepository.findById(productCategoryId).orElseThrow(
-                ()-> new Exception(
-                        "Product category with "+ productCategoryId + " Id does not exist")
-        );
-        ProductCategory productCategory1 = findProductCategory(productCategoryId);
-        if(Objects.nonNull(productCategory.getCategoryName())&& !"".equalsIgnoreCase(productCategory.getCategoryName())){
-            productCategory1.setCategoryName(productCategory.getCategoryName());
-        }
-        if(Objects.nonNull(productCategory.getDescription())&& !"".equalsIgnoreCase(productCategory.getDescription())){
-            productCategory1.setDescription(productCategory.getDescription());
-        }
-        if(Objects.nonNull(productCategory.getShopId())){
-            productCategory1.setShopId(productCategory.getShopId());
-        }
+                ProductCategory productCategory2 = productCategoryRepository.save(productCategory1);
+                BeanUtils.copyProperties(productCategory2, productCategoryDto);
+            productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
+            productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).productCategoryDetails(productCategory.getCategoryId())).withSelfRel());
+            return productCategoryDto;
+        }catch (Exception e){
+            throw new ProductCategoryNotFoundException(productCategoryId);
 
-        return productCategoryRepository.save(productCategory1);
+        }
     }
 
 }
