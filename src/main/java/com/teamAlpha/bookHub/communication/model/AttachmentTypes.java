@@ -8,9 +8,9 @@ public enum AttachmentTypes {
 	CATEGORY(4, "CATEGORY"), 
 	AVATAR(5, "AVATAR");
 
-	private Integer key; 
+	private Integer key;
 	private String description;
-	
+
 	AttachmentTypes(int key, String description) {
 		this.key = key;
 		this.description = description;
@@ -23,7 +23,7 @@ public enum AttachmentTypes {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public static AttachmentTypes lookUpByKey(Integer key) {
 		for (AttachmentTypes types : AttachmentTypes.values()) {
 			if (types.getKey() == key) {
@@ -32,4 +32,5 @@ public enum AttachmentTypes {
 		}
 		return null;
 	}
+
 }

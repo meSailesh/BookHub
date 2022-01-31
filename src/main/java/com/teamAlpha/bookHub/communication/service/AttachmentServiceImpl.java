@@ -1,25 +1,57 @@
 package com.teamAlpha.bookHub.communication.service;
 
-import java.beans.Encoder;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apache.tomcat.util.file.ConfigurationSource.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 
+import com.teamAlpha.bookHub.communication.entity.Attachment;
+import com.teamAlpha.bookHub.communication.repository.AttachmentRepository;
+import com.teamAlpha.bookHub.communication.utils.FileUtils;
+
+@Service
 public class AttachmentServiceImpl implements AttachmentService {
-	
-	private Path path = null; 
 
+	private Path path = null;
+
+	@Autowired
+	AttachmentRepository attachmentRepository;
+	
 	@Override
 	public void init() {
 		// TODO Auto-generated method stub
 
-	}
+		try {
+			Files.createDirectories(path);
 
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
-	public void saveAttachment(MultipartFile file) {
+	public Attachment saveAttachment(MultipartFile file, Attachment attachment) {
 		// TODO Auto-generated method stub
+		
+		Integer key = attachment.getAttachmentType().getKey();
+		try {
+			path = FileUtils.pathFinders(file, key);
+			Files.createDirectories(path);
+			attachment.setFileHash(FileUtils.fileHash(file).toString());
+			Files.copy(file.getInputStream(), path.resolve(file.getOriginalFilename()));
+			System.out.println(attachment.getAttachmentType());
+			return attachmentRepository.save(attachment);
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null; 
 
 	}
 
@@ -28,12 +60,16 @@ public class AttachmentServiceImpl implements AttachmentService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	private Path pathName() {
-		
-		//Base64Coder
-		
-		return null; 
+
+		// Base64Coder
+
+		return null;
 	}
+
+	
+
+	
 
 }
