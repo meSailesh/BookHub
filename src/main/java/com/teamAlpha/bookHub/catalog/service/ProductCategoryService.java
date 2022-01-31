@@ -1,10 +1,10 @@
-package com.teamAlpha.bookHub.productCategory.service;
+package com.teamAlpha.bookHub.catalog.service;
 
-import com.teamAlpha.bookHub.productCategory.controller.ProductCategoryController;
-import com.teamAlpha.bookHub.productCategory.entity.ProductCategory;
-import com.teamAlpha.bookHub.productCategory.exception.ProductCategoryNotFoundException;
-import com.teamAlpha.bookHub.productCategory.model.ProductCategoryDto;
-import com.teamAlpha.bookHub.productCategory.repository.ProductCategoryRepository;
+import com.teamAlpha.bookHub.catalog.controller.ProductCategoryController;
+import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
+import com.teamAlpha.bookHub.catalog.exception.ProductCategoryNotFoundException;
+import com.teamAlpha.bookHub.catalog.model.ProductCategoryDto;
+import com.teamAlpha.bookHub.catalog.repository.ProductCategoryRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

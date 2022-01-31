@@ -1,4 +1,6 @@
-package com.teamAlpha.bookHub.productCategory.entity;
+package com.teamAlpha.bookHub.catalog.entity;
+
+import com.teamAlpha.bookHub.common.entity.Schemas;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -7,7 +9,7 @@ import javax.validation.constraints.Size;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "product_category")
+@Table(name = "product_category", schema = Schemas.CATALOG)
 
 public class ProductCategory {
     @Id

@@ -1,6 +1,4 @@
-package com.teamAlpha.bookHub.productCategory.exception;
-
-import org.springframework.stereotype.Component;
+package com.teamAlpha.bookHub.catalog.exception;
 
 public class ProductCategoryNotFoundException extends RuntimeException{
 

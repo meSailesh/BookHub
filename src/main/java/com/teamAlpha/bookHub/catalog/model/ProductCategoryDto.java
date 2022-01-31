@@ -1,4 +1,4 @@
-package com.teamAlpha.bookHub.productCategory.model;
+package com.teamAlpha.bookHub.catalog.model;
 
 import org.springframework.hateoas.RepresentationModel;
 

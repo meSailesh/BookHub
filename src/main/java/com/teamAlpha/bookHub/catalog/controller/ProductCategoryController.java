@@ -1,17 +1,14 @@
-package com.teamAlpha.bookHub.productCategory.controller;
+package com.teamAlpha.bookHub.catalog.controller;
 
-import com.teamAlpha.bookHub.productCategory.entity.ProductCategory;
-import com.teamAlpha.bookHub.productCategory.exception.ProductCategoryNotFoundException;
-import com.teamAlpha.bookHub.productCategory.model.ErrorResponse;
-import com.teamAlpha.bookHub.productCategory.model.ProductCategoryDto;
-import com.teamAlpha.bookHub.productCategory.service.ProductCategoryService;
+import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
+import com.teamAlpha.bookHub.catalog.model.ProductCategoryDto;
+import com.teamAlpha.bookHub.catalog.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.List;
 
 @RestController

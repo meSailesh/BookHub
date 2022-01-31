@@ -1,6 +1,6 @@
-package com.teamAlpha.bookHub.productCategory.repository;
+package com.teamAlpha.bookHub.catalog.repository;
 
-import com.teamAlpha.bookHub.productCategory.entity.ProductCategory;
+import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

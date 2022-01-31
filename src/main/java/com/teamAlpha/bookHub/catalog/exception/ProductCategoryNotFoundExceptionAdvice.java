@@ -1,11 +1,10 @@
-package com.teamAlpha.bookHub.productCategory.exception;
+package com.teamAlpha.bookHub.catalog.exception;
 
-import com.teamAlpha.bookHub.productCategory.model.ErrorResponse;
+import com.teamAlpha.bookHub.catalog.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
