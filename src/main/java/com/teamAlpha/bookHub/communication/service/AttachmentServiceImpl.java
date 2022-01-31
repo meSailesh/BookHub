@@ -38,13 +38,13 @@ public class AttachmentServiceImpl implements AttachmentService {
 	public Attachment saveAttachment(MultipartFile file, Attachment attachment) {
 		// TODO Auto-generated method stub
 		
-		Integer key = attachment.getAttachmentType().getKey();
+		
 		try {
-			path = FileUtils.pathFinders(file, key);
+			path = FileUtils.pathFinders(file, attachment.getAttachmentTypeId());
 			Files.createDirectories(path);
 			attachment.setFileHash(FileUtils.fileHash(file).toString());
 			Files.copy(file.getInputStream(), path.resolve(file.getOriginalFilename()));
-			System.out.println(attachment.getAttachmentType());
+			System.out.println(attachment.getAttachmentTypeId());
 			return attachmentRepository.save(attachment);
 
 		} catch (Exception e) {

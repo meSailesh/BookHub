@@ -18,7 +18,7 @@ public class Attachment {
 	@Column(name = "a_id")
 	private Integer attachmentId; 
 	
-	@Column(name = "attachment_type")
+	@Column(name = "attachment_type_id")
 	private Integer attachmentTypeId;
 	
 	@Column (name ="uploaded_by")
@@ -39,10 +39,10 @@ public class Attachment {
 	public void setAttachmentId(Integer attachmentId) {
 		this.attachmentId = attachmentId;
 	}
-	public Integer getAttachmentType() {
+	public Integer getAttachmentTypeId() {
 		return attachmentTypeId;
 	}
-	public void setAttachmentType(Integer attachmentTypeId) {
+	public void setAttachmentTypeId(Integer attachmentTypeId) {
 		this.attachmentTypeId = attachmentTypeId;
 	}
 	public String getUploadedBy() {
