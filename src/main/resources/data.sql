@@ -1,0 +1,4 @@
+SELECT * FROM USERS
+INSERT INTO USERS(USER_ID,EMAIL,FIRST_NAME,ISBLOCKED,LAST_NAME,PASSWORD,ROLES,USERNAME) VALUES(1,'ashishdhakal6@gmail.com','Ghanashyam','true','Dhakal','1234','Admin','Ashish')
+INSERT INTO USERS(USER_ID,EMAIL,FIRST_NAME,ISBLOCKED,LAST_NAME,PASSWORD,ROLES,USERNAME) VALUES(2,'ashishdhak@gmail.com','Ghanashyam','true','Dhakal','1234','Admin','Ghanshyam')
+
