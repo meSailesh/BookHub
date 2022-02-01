@@ -26,7 +26,7 @@ import com.teamAlpha.bookHub.User.Repository.UserDatabaseHandler;
 
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 	@Autowired
 	UserDatabaseHandler userdatabase;
