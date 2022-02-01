@@ -1,4 +1,4 @@
-package com.teamAlpha.bookHub.Repository;
+package com.teamAlpha.bookHub.User.Repository;
 
 import java.util.List;
 
@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
-import com.teamAlpha.bookHub.Entities.User;
+import com.teamAlpha.bookHub.User.Entities.User;
+
+
 
 
 

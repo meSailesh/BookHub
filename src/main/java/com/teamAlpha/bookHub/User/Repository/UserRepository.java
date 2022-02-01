@@ -1,4 +1,4 @@
-package com.teamAlpha.bookHub.Repository;
+package com.teamAlpha.bookHub.User.Repository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import com.teamAlpha.bookHub.Entities.User;
+import com.teamAlpha.bookHub.User.Entities.User;
+
+
 
 @Repository
 @Primary
@@ -23,7 +25,7 @@ public class UserRepository implements UserDatabaseHandler{
 			userdb.save(user);
 			System.out.println("User data saved to the database");
 		}catch(Exception e) {
-			throw new Error("UserDatabaseError");
+			throw new Error("UserDatabaseError"+e);
 		}
 	}
 

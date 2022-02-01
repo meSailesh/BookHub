@@ -1,4 +1,4 @@
-package com.teamAlpha.bookHub.Service;
+package com.teamAlpha.bookHub.User.Service;
 
 import java.util.List;
 
@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import com.teamAlpha.bookHub.Entities.User;
-import com.teamAlpha.bookHub.Repository.UserDatabaseHandler;
-import com.teamAlpha.bookHub.Repository.UserRepository;
+import com.teamAlpha.bookHub.User.Entities.User;
+import com.teamAlpha.bookHub.User.Repository.UserDatabaseHandler;
+
 
 @Service
 public class UserDataService {

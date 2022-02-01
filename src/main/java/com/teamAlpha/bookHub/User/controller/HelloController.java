@@ -1,4 +1,4 @@
-package com.teamAlpha.bookHub.controller;
+package com.teamAlpha.bookHub.User.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

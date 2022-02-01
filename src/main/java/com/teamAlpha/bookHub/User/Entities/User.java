@@ -1,4 +1,4 @@
-package com.teamAlpha.bookHub.Entities;
+package com.teamAlpha.bookHub.User.Entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +12,7 @@ import javax.persistence.Table;
 public class User {
 	@Id
 	@Column(name="USER_ID")
-	@GeneratedValue(strategy= GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Long userId;
 	@Column(name="USERNAME")
 	private String userName;
@@ -27,12 +27,12 @@ public class User {
 	@Column(name="ROLES")
 	private String roles;
 	@Column(name="ISBLOCKED")
-	private String isBlocked;
+	private boolean isBlocked;
 	public User() {
 		
 	}
 	public User(Long userId, String userName, String password, String firstName, String lastName, String email,
-			String roles, String isBlocked) {
+			String roles, boolean isBlocked) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -85,10 +85,10 @@ public class User {
 	public void setRoles(String roles) {
 		this.roles = roles;
 	}
-	public String getIsBlocked() {
+	public boolean getIsBlocked() {
 		return isBlocked;
 	}
-	public void setIsBlocked(String isBlocked) {
+	public void setIsBlocked(boolean isBlocked) {
 		this.isBlocked = isBlocked;
 	}
 	@Override

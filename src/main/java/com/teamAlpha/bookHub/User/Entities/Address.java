@@ -1,4 +1,4 @@
-package com.teamAlpha.bookHub.Entities;
+package com.teamAlpha.bookHub.User.Entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
