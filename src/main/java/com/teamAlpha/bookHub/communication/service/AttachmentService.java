@@ -1,17 +1,23 @@
 package com.teamAlpha.bookHub.communication.service;
 
-import org.apache.tomcat.util.file.ConfigurationSource.Resource;
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.teamAlpha.bookHub.communication.entity.Attachment;
+import com.teamAlpha.bookHub.communication.exception.AttachmentDetailNotFoundException;
+import com.teamAlpha.bookHub.communication.model.AttachmentDto;
 
 public interface AttachmentService {
 	
 	public void init();
 	
-	public Attachment saveAttachment(MultipartFile file, Attachment attachment);
+	public AttachmentDto saveAttachment(MultipartFile file, Attachment attachment);
 	
-	public Resource loadSingleAttachment(String fileName);
+	
+	public List<AttachmentDto> getAllAttachmentDetails();
+	
+	public AttachmentDto singleAttachmentDetail(Integer attachmentId) throws AttachmentDetailNotFoundException;
 
 	
 }
