@@ -4,11 +4,20 @@ import org.springframework.hateoas.RepresentationModel;
 
 public class AttachmentDto extends RepresentationModel<AttachmentDto> {
 
+	private Integer attachmentId;
 	private Integer attachmentTypeId;
 	private String uploadedBy;
 	private String uploadedOn;
 	private Integer shopId;
 	private String fileHash;
+
+	public Integer getAttachmentId() {
+		return attachmentId;
+	}
+
+	public void setAttachmentId(Integer attachmentId) {
+		this.attachmentId = attachmentId;
+	}
 
 	public Integer getAttachmentTypeId() {
 		return attachmentTypeId;
@@ -48,6 +57,13 @@ public class AttachmentDto extends RepresentationModel<AttachmentDto> {
 
 	public void setFileHash(String fileHash) {
 		this.fileHash = fileHash;
+	}
+
+	@Override
+	public String toString() {
+		return "AttachmentDto [attachmentId=" + attachmentId + ", attachmentTypeId=" + attachmentTypeId
+				+ ", uploadedBy=" + uploadedBy + ", uploadedOn=" + uploadedOn + ", shopId=" + shopId + ", fileHash="
+				+ fileHash + "]";
 	}
 
 }
