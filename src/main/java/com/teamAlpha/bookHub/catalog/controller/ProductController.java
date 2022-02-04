@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/product")
@@ -21,9 +20,9 @@ public class ProductController {
 
 
     @PostMapping(path = "/create")
-    public ResponseEntity<?> createProduct(@Valid  @RequestBody Product product){
+    public ResponseEntity<?> createProduct(@Valid  @RequestBody ProductDto productDto){
         return ResponseEntity.status(HttpStatus.OK)
-                        .body(productService.createProduct(product));
+                        .body(productService.createProduct(productDto));
     }
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> getProductDetail(@PathVariable("id") Integer productId){
@@ -36,8 +35,14 @@ public class ProductController {
     }
 //
     @GetMapping(path = "/list")
-    public List<Product> getAllProduct(){
-        return null;
+    public ResponseEntity<?> getAllProduct(){
+        return new ResponseEntity<>(productService.getAllProduct(), HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/{id}/update")
+    public ResponseEntity<ProductDto> updateProduct (@PathVariable("id") Integer productId, @RequestBody ProductDto productDto){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productService.updateProduct(productId, productDto));
     }
 
 

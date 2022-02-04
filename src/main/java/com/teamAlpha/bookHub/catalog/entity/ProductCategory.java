@@ -87,8 +87,7 @@ public class ProductCategory {
                 "categoryId=" + categoryId +
                 ", categoryName='" + categoryName + '\'' +
                 ", description='" + description + '\'' +
-                ", shopId=" + shopId +
-                ", products=" + products +
+                ", shopId=" + shopId+
                 '}';
     }
 }

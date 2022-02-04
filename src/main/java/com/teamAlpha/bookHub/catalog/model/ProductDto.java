@@ -6,14 +6,30 @@ import org.springframework.hateoas.RepresentationModel;
 
 public class ProductDto extends RepresentationModel <ProductDto>{
 
+    private Integer productId;
     private String productName;
     private String description;
     private Integer price;
     private Integer imageId;
     private Integer availableCount;
     private Integer shopId;
-
+    private Integer productCategoryId;
     private ProductCategory productCategory;
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    public Integer getProductCategoryId() {
+        return productCategoryId;
+    }
+    public void setProductCategoryId(Integer productCategoryId) {
+        this.productCategoryId = productCategoryId;
+    }
 
     public String getProductName() {
         return productName;
@@ -69,5 +85,19 @@ public class ProductDto extends RepresentationModel <ProductDto>{
 
     public void setProductCategory(ProductCategory productCategory) {
         this.productCategory = productCategory;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", imageId=" + imageId +
+                ", availableCount=" + availableCount +
+                ", shopId=" + shopId +
+                ", productCategoryId=" + productCategoryId +
+                '}';
     }
 }

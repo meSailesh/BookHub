@@ -14,7 +14,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 
 
-
 import java.util.List;
 import java.util.Objects;
 
@@ -68,25 +67,25 @@ public class ProductCategoryService {
 
         List<ProductCategory> listCategory = productCategoryRepository.findAll();
 
-//
+//      List type casting
 //        List<ProductCategoryDto> variable = (List<ProductCategoryDto>)(List<?>) listCategory;
 //        System.out.println(variable);
         return listCategory;
     }
 
     public CollectionModel<EntityModel<ProductCategory>> all() {
+        List<ProductCategory> listCategory = productCategoryRepository.findAll();
+        //Type casting
+        List<ProductCategoryDto> variable = (List<ProductCategoryDto>)(List<?>) listCategory;
         logger.info("Listing all Categories");
-
-        List<EntityModel<ProductCategory>> categoryLis = productCategoryRepository.findAll().stream()
+        List<EntityModel<ProductCategory>> categoryLis = listCategory.stream()
                 .map(category -> EntityModel.of(category,
                         linkTo(methodOn(ProductCategoryController.class).productCategoryDetails(category.getCategoryId())).withSelfRel(),
-                        linkTo(methodOn(ProductCategoryController.class).all()).withRel("category_lis"))
+                        linkTo(methodOn(ProductCategoryController.class).listCategory()).withRel("category_lis"))
                 )
                 .collect(toList());
 
         return CollectionModel.of(categoryLis);
-
-
 
     }
 

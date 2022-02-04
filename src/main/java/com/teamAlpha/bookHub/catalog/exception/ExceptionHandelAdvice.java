@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Date;
 
 @ControllerAdvice
-public class ProductCategoryNotFoundExceptionAdvice {
+public class ExceptionHandelAdvice {
 
     @ResponseBody
     @ExceptionHandler(value = ProductCategoryNotFoundException.class)

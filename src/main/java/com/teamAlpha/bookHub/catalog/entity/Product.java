@@ -36,23 +36,12 @@ public class Product {
     @Column(name = "shop_id")
     private Integer shopId;
 
-
-    @Transient
-    private Integer productCategoryId;
-
 //    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     //name can be anything but ref name should be @Colum name or id
     @JoinColumn(name = "product_category_id", referencedColumnName = "category_id")
     private ProductCategory productCategory;
 
-    public Integer getProductCategoryId() {
-        return productCategoryId;
-    }
-
-    public void setProductCategoryId(Integer productCategoryId) {
-        this.productCategoryId = productCategoryId;
-    }
 
     public ProductCategory getProductCategory() {
         return productCategory;

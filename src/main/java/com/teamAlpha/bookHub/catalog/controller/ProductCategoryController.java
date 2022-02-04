@@ -4,8 +4,6 @@ import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
 import com.teamAlpha.bookHub.catalog.model.ProductCategoryDto;
 import com.teamAlpha.bookHub.catalog.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,18 +48,14 @@ public class ProductCategoryController {
     }
 
     @PutMapping(path = "/{id}/update")
-    public ProductCategoryDto updateProductCategory(@PathVariable("id") Integer productCategoryId, @RequestBody ProductCategory productCategory){
-        return productCategoryService.updateProductCategoryDetails(productCategoryId, productCategory);
+    public ResponseEntity<ProductCategoryDto >updateProductCategory(@PathVariable("id") Integer productCategoryId, @RequestBody ProductCategory productCategory){
+        return ResponseEntity.status(HttpStatus.OK).body(
+                productCategoryService.updateProductCategoryDetails(productCategoryId, productCategory));
     }
 
     @GetMapping(path = "all")
-    public CollectionModel<EntityModel<ProductCategory>> all(){
-        return productCategoryService.all();
-    }
-
-    @GetMapping(path = "pcall")
-    public ResponseEntity<?> produccc(){
-        return new ResponseEntity<>(productCategoryService.getAllProductCategory(), HttpStatus.OK);
+    public ResponseEntity<?> listCategory(){
+        return new ResponseEntity<>(productCategoryService.all(), HttpStatus.OK);
     }
 
 }
