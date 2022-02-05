@@ -51,7 +51,7 @@ public class ProductService {
             throw new ProductNotFoundException(productId);
         }
     }
-    public ProductDto createProduct (ProductDto productDto) throws ProductCategoryNotFoundException {
+    public ProductDto createProduct (ProductDto productDto) throws ProductCategoryNotFoundException, ProductCategoryNotFoundException {
         logger.info("Creat product");
         try{
 
@@ -115,7 +115,7 @@ public class ProductService {
                     existProduct.setProductCategory(productCategory);
                     existProduct.setProductId(productId);
                     Product product1 = productRepository.save(existProduct);
-                    logger.info("Successfully updated product details");
+                    logger.info("Successfully updated product details of Id: {}", productId);
 
                     existProduct.getProductCategory().getCategoryId();
                     ProductDto productDto1 = new ProductDto();

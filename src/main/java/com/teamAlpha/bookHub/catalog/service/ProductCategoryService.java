@@ -56,7 +56,7 @@ public class ProductCategoryService {
             return productCategoryDto;
 
         }catch (Exception e){
-            logger.info("some thing wrong with category id");
+            logger.info("some thing wrong with category id {}", productCategoryId );
             throw new ProductCategoryNotFoundException(productCategoryId);
         }
     }
