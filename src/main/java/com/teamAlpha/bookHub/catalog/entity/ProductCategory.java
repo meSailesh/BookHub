@@ -2,9 +2,17 @@ package com.teamAlpha.bookHub.catalog.entity;
 
 import com.teamAlpha.bookHub.common.entity.Schemas;
 
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -17,6 +25,7 @@ public class ProductCategory {
 
     @Column(name = "category_id")
     private Integer categoryId;
+
     @NotNull
     @Size(min = 2, message = "Category name should have at least 2 characters")
     @Column(name = "category_name")
@@ -27,6 +36,10 @@ public class ProductCategory {
     @NotNull
     @Column (name = "shop_id")
     private Integer shopId;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "productCategory")
+    private Set<Product> products = new HashSet<>();
 
     public Integer getCategoryId() {
         return categoryId;
@@ -60,13 +73,21 @@ public class ProductCategory {
         this.shopId = shopId;
     }
 
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
     @Override
     public String toString() {
         return "ProductCategory{" +
                 "categoryId=" + categoryId +
                 ", categoryName='" + categoryName + '\'' +
                 ", description='" + description + '\'' +
-                ", shopId=" + shopId +
+                ", shopId=" + shopId+
                 '}';
     }
 }
