@@ -1,4 +1,4 @@
-package com.teamAlpha.bookHub.catalog.model;
+package com.teamAlpha.bookHub.common.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
