@@ -6,10 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.xml.validation.Schema;
 
 import com.teamAlpha.bookHub.common.entity.Schemas;
-import com.teamAlpha.bookHub.communication.model.AttachmentTypes;
 
 @Entity
 @Table(name = "attachment", schema = Schemas.COMMUNICATION)
