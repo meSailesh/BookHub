@@ -13,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
 import com.teamAlpha.bookHub.communication.entity.Attachment;
 import com.teamAlpha.bookHub.communication.model.AttachmentDto;
 import com.teamAlpha.bookHub.communication.service.AttachmentService;
 
 @RestController
-@RequestMapping("api/v1/attachment")
+@RequestMapping("api/v1/attachments")
 public class AttachmentController {
 
 	@Autowired
@@ -36,7 +35,7 @@ public class AttachmentController {
 		return ResponseEntity.status(HttpStatus.OK).body(savedAttachment);
 	}
 
-	@GetMapping("/viewAll")
+	@GetMapping("/list")
 	public ResponseEntity<List<AttachmentDto>> getAllAttachmentDetails() {
 		List<AttachmentDto> attachments = attachmentService.getAllAttachmentDetails();
 
@@ -47,7 +46,7 @@ public class AttachmentController {
 		return ResponseEntity.status(HttpStatus.OK).body(attachments);
 	}
 	
-	@GetMapping("/view/{id}")
+	@GetMapping("/{id}")
     public ResponseEntity<AttachmentDto> singleAttchmentDetail(@PathVariable("id") Integer attachmentId) {
         AttachmentDto attachment = attachmentService.singleAttachmentDetail(attachmentId);     
 		return ResponseEntity.status(HttpStatus.OK).body(attachment);
