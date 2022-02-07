@@ -1,11 +1,15 @@
 package com.teamAlpha.bookHub.communication.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.teamAlpha.bookHub.common.entity.Schemas;
 
@@ -25,7 +29,8 @@ public class Attachment {
 	private String uploadedBy;
 
 	@Column(name = "uploaded_on")
-	private String uploadedOn;
+	@UpdateTimestamp
+	private Date uploadedOn;
 
 	@Column(name = "shop_id")
 	private Integer shopId;
@@ -57,11 +62,11 @@ public class Attachment {
 		this.uploadedBy = uploadedBy;
 	}
 
-	public String getUploadedOn() {
+	public Date getUploadedOn() {
 		return uploadedOn;
 	}
 
-	public void setUploadedOn(String uploadedOn) {
+	public void setUploadedOn(Date uploadedOn) {
 		this.uploadedOn = uploadedOn;
 	}
 
