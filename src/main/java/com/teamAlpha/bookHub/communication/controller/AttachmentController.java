@@ -17,6 +17,8 @@ import com.teamAlpha.bookHub.communication.entity.Attachment;
 import com.teamAlpha.bookHub.communication.model.AttachmentDto;
 import com.teamAlpha.bookHub.communication.service.AttachmentService;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("api/v1/attachments")
 public class AttachmentController {
@@ -51,5 +53,11 @@ public class AttachmentController {
         AttachmentDto attachment = attachmentService.singleAttachmentDetail(attachmentId);     
 		return ResponseEntity.status(HttpStatus.OK).body(attachment);
     }
+
+	@GetMapping("/{id}/download")
+	public void downloadAttachment(HttpServletResponse response, @PathVariable("id") Integer attachmentId){
+		attachmentService.downloadAttachment(response, attachmentId);
+//		return new ResponseEntity<Object>(HttpStatus.OK);
+	}
 
 }
