@@ -5,12 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.teamAlpha.bookHub.communication.entity.Attachment;
@@ -58,6 +53,11 @@ public class AttachmentController {
 	public void downloadAttachment(HttpServletResponse response, @PathVariable("id") Integer attachmentId){
 		attachmentService.downloadAttachment(response, attachmentId);
 //		return new ResponseEntity<Object>(HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{id}/delete")
+	public void deleteAttachment(@PathVariable("id") Integer attachmentId){
+		attachmentService.deleteAttachment(attachmentId);
 	}
 
 }

@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.io.*;
+import java.io.File;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,6 +16,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.teamAlpha.bookHub.communication.controller.AttachmentController;
@@ -48,8 +50,6 @@ public class AttachmentService {
 		}
 	}
 
-
-	
 	public AttachmentDto saveAttachment(MultipartFile file, Attachment attachment) {
 		try {
 			path = FileUtils.pathFinders(file, attachment.getAttachmentTypeId());
@@ -111,6 +111,9 @@ public class AttachmentService {
 			Attachment attachment = attachmentRepository.findById(attachmentId).get();
 			BeanUtils.copyProperties( attachment,attachmentDto);
 
+
+
+
 			String path = rootPath.concat("/" + attachment.getAttachmentTypeId() + "/" + attachment.getFileHash());
 
 			File file = new File(path);
@@ -133,6 +136,43 @@ public class AttachmentService {
 
 
 	}
+
+	public void deleteAttachment (Integer attachmentId) throws AttachmentDetailNotFoundException{
+		try {
+
+			AttachmentDto attachmentDto = new AttachmentDto();
+			Attachment attachment = attachmentRepository.findById(attachmentId).get();
+			BeanUtils.copyProperties( attachment,attachmentDto);
+
+			File keyPath = new File(rootPath.concat("/"+ attachment.getAttachmentTypeId()));
+			System.out.println(keyPath);
+			File hasmap = new File(rootPath.concat("/"+ attachment.getAttachmentTypeId() + "/"+ attachment.getFileHash()));
+
+			if(keyPath.list().length== 0){
+
+				FileSystemUtils.deleteRecursively(keyPath);
+			}else{
+				FileSystemUtils.deleteRecursively(hasmap);
+				if(keyPath.list().length==0){
+					FileSystemUtils.deleteRecursively(keyPath);
+				}
+				attachmentRepository.deleteById(attachmentId);
+
+			}
+
+		}catch (Exception e){
+			throw new AttachmentDetailNotFoundException(attachmentId);
+		}
+
+//		private void deleteEmptyDir(File file1)
+//		{
+//			file1.delete();
+//			System.out.println("Directory is deleted : " + file1.getAbsolutePath());
+//		}
+
+	}
+
+
 
 
 

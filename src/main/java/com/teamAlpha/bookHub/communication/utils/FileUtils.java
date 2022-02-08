@@ -1,5 +1,6 @@
 package com.teamAlpha.bookHub.communication.utils;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -39,5 +40,13 @@ public class FileUtils {
 		}
 		return false;
 	}
+
+	public void deleteEmptyDir(File file)
+	{
+		file.delete();
+		System.out.println("Directory is deleted : " + file.getAbsolutePath());
+	}
+
+
 
 }
