@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.teamAlpha.bookHub.common.entity.Schemas;
 
@@ -30,6 +31,7 @@ public class Attachment {
 
 	@Column(name = "uploaded_on")
 	@UpdateTimestamp
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date uploadedOn;
 
 	@Column(name = "shop_id")

@@ -6,13 +6,14 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.teamAlpha.bookHub.communication.exception.InvalidAttachmentTypeException;
 import com.teamAlpha.bookHub.communication.model.AttachmentStorageProperties;
 
 public class FileUtils {
 
 	private final static String rootPath = new AttachmentStorageProperties().getPATH();
 
-	public static Path pathFinders(MultipartFile file, Integer key) throws Exception {
+	public static Path pathFinders(MultipartFile file, Integer key) throws InvalidAttachmentTypeException {
 
 		if (fileTypeValidation(file)) {
 
@@ -22,7 +23,9 @@ public class FileUtils {
 
 			return getPath;
 		}
-		return null;
+		else {
+			throw new InvalidAttachmentTypeException("Please select image type file for attachment.");
+		}
 
 	}
 
@@ -30,7 +33,7 @@ public class FileUtils {
 		return UUID.nameUUIDFromBytes(file.getOriginalFilename().getBytes());
 	}
 
-	private static Boolean fileTypeValidation(MultipartFile file) throws Exception {
+	private static Boolean fileTypeValidation(MultipartFile file) throws InvalidAttachmentTypeException {
 
 		String[] type = file.getContentType().split("/");
 

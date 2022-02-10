@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.teamAlpha.bookHub.communication.entity.Attachment;
+import com.teamAlpha.bookHub.communication.exception.AttachmentDetailNotFoundException;
 import com.teamAlpha.bookHub.communication.model.AttachmentDto;
 import com.teamAlpha.bookHub.communication.service.AttachmentService;
 
@@ -37,19 +38,24 @@ public class AttachmentController {
 
 	@GetMapping("/list")
 	public ResponseEntity<List<AttachmentDto>> getAllAttachmentDetails() {
-		List<AttachmentDto> attachments = attachmentService.getAllAttachmentDetails();
-
-		if (attachments.size() <= 0) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
-
-		return ResponseEntity.status(HttpStatus.OK).body(attachments);
+		try {
+			List<AttachmentDto> attachments = attachmentService.getAllAttachmentDetails();
+			return ResponseEntity.status(HttpStatus.OK).body(attachments);
+		} catch (AttachmentDetailNotFoundException e) {
+			throw new AttachmentDetailNotFoundException("No attachment details record found");
+					
+		}		
 	}
 	
 	@GetMapping("/{id}")
     public ResponseEntity<AttachmentDto> singleAttchmentDetail(@PathVariable("id") Integer attachmentId) {
-        AttachmentDto attachment = attachmentService.singleAttachmentDetail(attachmentId);     
-		return ResponseEntity.status(HttpStatus.OK).body(attachment);
+		try {
+			AttachmentDto attachment = attachmentService.singleAttachmentDetail(attachmentId);     
+			return ResponseEntity.status(HttpStatus.OK).body(attachment);
+		} catch (AttachmentDetailNotFoundException e) {
+			throw new AttachmentDetailNotFoundException(attachmentId);
+		}
+        
     }
 
 }
