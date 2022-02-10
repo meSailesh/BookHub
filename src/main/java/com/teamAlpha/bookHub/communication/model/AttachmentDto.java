@@ -1,5 +1,8 @@
 package com.teamAlpha.bookHub.communication.model;
 
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.RepresentationModel;
 
 public class AttachmentDto extends RepresentationModel<AttachmentDto> {
@@ -7,7 +10,9 @@ public class AttachmentDto extends RepresentationModel<AttachmentDto> {
 	private Integer attachmentId;
 	private Integer attachmentTypeId;
 	private String uploadedBy;
-	private String uploadedOn;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date uploadedOn;
 	private Integer shopId;
 	private String fileHash;
 
@@ -35,11 +40,11 @@ public class AttachmentDto extends RepresentationModel<AttachmentDto> {
 		this.uploadedBy = uploadedBy;
 	}
 
-	public String getUploadedOn() {
+	public Date getUploadedOn() {
 		return uploadedOn;
 	}
 
-	public void setUploadedOn(String uploadedOn) {
+	public void setUploadedOn(Date uploadedOn) {
 		this.uploadedOn = uploadedOn;
 	}
 

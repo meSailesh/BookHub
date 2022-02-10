@@ -5,99 +5,135 @@ import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
 import com.teamAlpha.bookHub.catalog.exception.ProductCategoryNotFoundException;
 import com.teamAlpha.bookHub.catalog.model.ProductCategoryDto;
 import com.teamAlpha.bookHub.catalog.repository.ProductCategoryRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Objects;
 
+import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class ProductCategoryService {
-	@Autowired
-	ProductCategoryRepository productCategoryRepository;
+    private final static Logger logger = LoggerFactory.getLogger(ProductCategoryService.class);
 
-	public ProductCategoryDto createProductCategory(ProductCategory productCategory) {
-		ProductCategoryDto productCategoryDto = new ProductCategoryDto();
-		ProductCategory productCategory1 = productCategoryRepository.save(productCategory);
-		BeanUtils.copyProperties(productCategory1, productCategoryDto);
+    @Autowired
+    ProductCategoryRepository productCategoryRepository;
+    public ProductCategoryDto createProductCategory (ProductCategory productCategory) throws Exception {
 
-		productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
-		productCategoryDto.add(linkTo(
-				methodOn(ProductCategoryController.class).productCategoryDetails(productCategory.getCategoryId()))
-						.withSelfRel());
-		return productCategoryDto;
-	}
+            logger.info("create new product category");
+            ProductCategoryDto productCategoryDto = new ProductCategoryDto();
+            ProductCategory productCategory1 = productCategoryRepository.save(productCategory);
+            logger.info("successfully created product category");
+            BeanUtils.copyProperties(productCategory1, productCategoryDto);
+            productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
+            productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).productCategoryDetails(productCategory.getCategoryId())).withSelfRel());
+            return productCategoryDto;
 
-	public ProductCategoryDto productCategoryDetail(Integer productCategoryId) throws ProductCategoryNotFoundException {
-		try {
 
-			ProductCategoryDto productCategoryDto = new ProductCategoryDto();
-			ProductCategory productCategory = productCategoryRepository.findById(productCategoryId).get();
-			System.out.println(productCategory);
-			BeanUtils.copyProperties(productCategory, productCategoryDto);
-			productCategoryDto
-					.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
-			return productCategoryDto;
 
-		} catch (Exception e) {
-			throw new ProductCategoryNotFoundException(productCategoryId);
-		}
-	}
+    }
 
-	public List<ProductCategory> getAllProductCategory() {
-		ProductCategoryDto productCategoryDto = new ProductCategoryDto();
-		List<ProductCategory> listCategory = productCategoryRepository.findAll();
-		return listCategory;
-	}
+    public ProductCategoryDto productCategoryDetail(Integer productCategoryId) throws ProductCategoryNotFoundException {
+        try{
 
-	public String deleteProductCategory(Integer productCategoryId) throws ProductCategoryNotFoundException {
+            logger.info("Fetch product Details by category id");
 
-		try {
-			productCategoryRepository.findById(productCategoryId).get();
-			productCategoryRepository.deleteById(productCategoryId);
-			return ("Successfully delete product category" + productCategoryId + " Id ");
+            ProductCategoryDto productCategoryDto = new ProductCategoryDto();
+            ProductCategory productCategory = productCategoryRepository.findById(productCategoryId).get();
+            System.out.println(productCategory);
+            BeanUtils.copyProperties(productCategory,productCategoryDto);
+            productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
+            logger.info("Successfully fetch category of Id: {}", productCategoryId);
+            return productCategoryDto;
 
-		} catch (Exception e) {
-			throw new ProductCategoryNotFoundException(productCategoryId);
-		}
+        }catch (Exception e){
+            logger.info("some thing wrong with category id {}", productCategoryId );
+            throw new ProductCategoryNotFoundException(productCategoryId);
+        }
+    }
 
-	}
+    public List<ProductCategory> getAllProductCategory (){
+        logger.info("List all Product Categories");
+        ProductCategoryDto productCategoryDto = new ProductCategoryDto();
 
-	public ProductCategoryDto updateProductCategoryDetails(Integer productCategoryId, ProductCategory productCategory)
-			throws ProductCategoryNotFoundException {
+        List<ProductCategory> listCategory = productCategoryRepository.findAll();
 
-		try {
-			ProductCategory productCategory1 = productCategoryRepository.findById(productCategoryId).get();
-			ProductCategoryDto productCategoryDto = new ProductCategoryDto();
+//      List type casting
+//        List<ProductCategoryDto> variable = (List<ProductCategoryDto>)(List<?>) listCategory;
+//        System.out.println(variable);
+        return listCategory;
+    }
 
-			if (Objects.nonNull(productCategory.getCategoryName())
-					&& !"".equalsIgnoreCase(productCategory.getCategoryName())) {
-				productCategory1.setCategoryName(productCategory.getCategoryName());
-			}
-			if (Objects.nonNull(productCategory.getDescription())
-					&& !"".equalsIgnoreCase(productCategory.getDescription())) {
-				productCategory1.setDescription(productCategory.getDescription());
-			}
-			if (Objects.nonNull(productCategory.getShopId())) {
-				productCategory1.setShopId(productCategory.getShopId());
-			}
+    public CollectionModel<EntityModel<ProductCategory>> all() {
+        List<ProductCategory> listCategory = productCategoryRepository.findAll();
+        //Type casting
+        List<ProductCategoryDto> variable = (List<ProductCategoryDto>)(List<?>) listCategory;
+        logger.info("Listing all Categories");
+        List<EntityModel<ProductCategory>> categoryLis = listCategory.stream()
+                .map(category -> EntityModel.of(category,
+                        linkTo(methodOn(ProductCategoryController.class).productCategoryDetails(category.getCategoryId())).withSelfRel(),
+                        linkTo(methodOn(ProductCategoryController.class).listCategory()).withRel("category_lis"))
+                )
+                .collect(toList());
 
-			ProductCategory productCategory2 = productCategoryRepository.save(productCategory1);
-			BeanUtils.copyProperties(productCategory2, productCategoryDto);
-			productCategoryDto
-					.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
-			productCategoryDto.add(linkTo(
-					methodOn(ProductCategoryController.class).productCategoryDetails(productCategory2.getCategoryId()))
-							.withSelfRel());
-			return productCategoryDto;
-		} catch (Exception e) {
-			throw new ProductCategoryNotFoundException(productCategoryId);
+        return CollectionModel.of(categoryLis);
 
-		}
-	}
+    }
+
+    public String deleteProductCategory(Integer productCategoryId) throws ProductCategoryNotFoundException {
+
+        try{
+            logger.info("Deleting category by id");
+            productCategoryRepository.findById(productCategoryId).get();
+            productCategoryRepository.deleteById(productCategoryId);
+            logger.info("Successfully delete category id: {}", productCategoryId);
+            return("Successfully delete product category" + productCategoryId + " Id ");
+
+        }catch (Exception e){
+            logger.error("Cannot find category id {}", productCategoryId);
+            throw new ProductCategoryNotFoundException(productCategoryId);
+        }
+
+    }
+
+    public ProductCategoryDto updateProductCategoryDetails(Integer productCategoryId, ProductCategory productCategory) throws ProductCategoryNotFoundException {
+
+        try{
+            logger.info("updating category");
+            ProductCategory productCategory1 = productCategoryRepository.findById(productCategoryId).get();
+            ProductCategoryDto productCategoryDto = new ProductCategoryDto();
+
+                if(Objects.nonNull(productCategory.getCategoryName())&& !"".equalsIgnoreCase(productCategory.getCategoryName())){
+                    productCategory1.setCategoryName(productCategory.getCategoryName());
+                }
+                if(Objects.nonNull(productCategory.getDescription())&& !"".equalsIgnoreCase(productCategory.getDescription())){
+                    productCategory1.setDescription(productCategory.getDescription());
+                }
+                if(Objects.nonNull(productCategory.getShopId())){
+                    productCategory1.setShopId(productCategory.getShopId());
+                }
+
+                ProductCategory productCategory2 = productCategoryRepository.save(productCategory1);
+                logger.info("Saved category successfully");
+                BeanUtils.copyProperties(productCategory2, productCategoryDto);
+            productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
+            productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).productCategoryDetails(productCategory2.getCategoryId())).withSelfRel());
+
+            return productCategoryDto;
+        }catch (Exception e){
+            logger.error("Category id {} not found", productCategoryId);
+            throw new ProductCategoryNotFoundException(productCategoryId);
+
+        }
+    }
 
 }
