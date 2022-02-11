@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.teamAlpha.bookHub.common.entity.Schemas;
@@ -18,8 +20,9 @@ public class ProductReview {
 	@Column(name = "review_id")
 	private Integer reviewId;
 
-	@Column(name = "product_id")
-	private Integer productId;
+	@ManyToOne
+	@JoinColumn(name = "product_id")
+	private Product product;
 
 	@Column(name = "user_id")
 	private Integer userId;
@@ -38,12 +41,12 @@ public class ProductReview {
 		this.reviewId = reviewId;
 	}
 
-	public Integer getProductId() {
-		return productId;
+	public Product getProduct() {
+		return product;
 	}
 
-	public void setProductId(Integer productId) {
-		this.productId = productId;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	public Integer getUserId() {
@@ -72,7 +75,7 @@ public class ProductReview {
 
 	@Override
 	public String toString() {
-		return "ProductReview [reviewId=" + reviewId + ", productId=" + productId + ", userId=" + userId
+		return "ProductReview [reviewId=" + reviewId + ", product=" + product + ", userId=" + userId
 				+ ", ratingValue=" + ratingValue + ", reviewMessage=" + reviewMessage + "]";
 	}
 

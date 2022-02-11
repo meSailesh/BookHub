@@ -1,12 +1,22 @@
 package com.teamAlpha.bookHub.catalog.entity;
 
-import com.teamAlpha.bookHub.common.entity.Schemas;
+import static javax.persistence.GenerationType.IDENTITY;
 
-import javax.persistence.*;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import static javax.persistence.GenerationType.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.teamAlpha.bookHub.common.entity.Schemas;
 
 @Entity
 @Table(name = "product", schema = Schemas.CATALOG)
@@ -35,13 +45,16 @@ public class Product {
     @NotNull
     @Column(name = "shop_id")
     private Integer shopId;
-
+    
 //    @JsonIgnore
     @ManyToOne()
     //name can be anything but ref name should be @Colum name or id
     @JoinColumn(name = "product_category_id", referencedColumnName = "category_id")
     private ProductCategory productCategory;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
+    List<ProductReview> productReview; 
 
     public ProductCategory getProductCategory() {
         return productCategory;
@@ -108,7 +121,17 @@ public class Product {
         this.productCategory = productCategory;
     }
 
-    @Override
+    public List<ProductReview> getProductReview() {
+		return productReview;
+	}
+
+
+	public void setProductReview(List<ProductReview> productReview) {
+		this.productReview = productReview;
+	}
+
+
+	@Override
     public String toString() {
         return "Product{" +
                 "productId=" + productId +
@@ -119,6 +142,7 @@ public class Product {
                 ", availableCount=" + availableCount +
                 ", shopId=" + shopId +
                 ", productCategory=" + productCategory +
+                ", ProductReviw=" + productReview +
                 '}';
     }
 }
