@@ -110,21 +110,14 @@ public class AttachmentService {
 			AttachmentDto attachmentDto = new AttachmentDto();
 			Attachment attachment = attachmentRepository.findById(attachmentId).get();
 			BeanUtils.copyProperties( attachment,attachmentDto);
-
-
-
-
 			String path = rootPath.concat("/" + attachment.getAttachmentTypeId() + "/" + attachment.getFileHash());
 
 			File file = new File(path);
 			String[] fileList = file.list();
 			File imagePath = new File(path.concat("/"+fileList[0]));
 
-
 			String mimeType = URLConnection.guessContentTypeFromName(file.getName());
-
 			response.setContentType(mimeType);
-
 			response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + imagePath.getName() + "\""));
 			response.setContentLength((int) imagePath.length());
 			InputStream inputStream = new BufferedInputStream(new FileInputStream(imagePath));
@@ -146,34 +139,23 @@ public class AttachmentService {
 
 			File keyPath = new File(rootPath.concat("/"+ attachment.getAttachmentTypeId()));
 			System.out.println(keyPath);
-			File hasmap = new File(rootPath.concat("/"+ attachment.getAttachmentTypeId() + "/"+ attachment.getFileHash()));
+			File hashMapPath = new File(rootPath.concat("/"+ attachment.getAttachmentTypeId() + "/"+ attachment.getFileHash()));
 
 			if(keyPath.list().length== 0){
-
 				FileSystemUtils.deleteRecursively(keyPath);
 			}else{
-				FileSystemUtils.deleteRecursively(hasmap);
+				FileSystemUtils.deleteRecursively(hashMapPath);
 				if(keyPath.list().length==0){
 					FileSystemUtils.deleteRecursively(keyPath);
 				}
 				attachmentRepository.deleteById(attachmentId);
 
 			}
-
 		}catch (Exception e){
 			throw new AttachmentDetailNotFoundException(attachmentId);
 		}
 
-//		private void deleteEmptyDir(File file1)
-//		{
-//			file1.delete();
-//			System.out.println("Directory is deleted : " + file1.getAbsolutePath());
-//		}
-
 	}
-
-
-
 
 
 }

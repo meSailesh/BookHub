@@ -4,6 +4,8 @@ import com.teamAlpha.bookHub.catalog.entity.Product;
 import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.util.Date;
+
 public class ProductDto extends RepresentationModel <ProductDto>{
 
     private Integer productId;
@@ -15,6 +17,8 @@ public class ProductDto extends RepresentationModel <ProductDto>{
     private Integer shopId;
     private Integer productCategoryId;
     private ProductCategory productCategory;
+    private Date createdOn;
+    private Date updatedOn;
 
     public Integer getProductId() {
         return productId;
@@ -87,6 +91,22 @@ public class ProductDto extends RepresentationModel <ProductDto>{
         this.productCategory = productCategory;
     }
 
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(Date updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
     @Override
     public String toString() {
         return "ProductDto{" +
@@ -98,6 +118,9 @@ public class ProductDto extends RepresentationModel <ProductDto>{
                 ", availableCount=" + availableCount +
                 ", shopId=" + shopId +
                 ", productCategoryId=" + productCategoryId +
+                ", productCategory=" + productCategory +
+                ", createdOn=" + createdOn +
+                ", updatedOn=" + updatedOn +
                 '}';
     }
 }
