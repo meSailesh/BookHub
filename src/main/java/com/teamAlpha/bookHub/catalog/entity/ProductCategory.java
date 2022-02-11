@@ -1,4 +1,4 @@
-package com.teamAlpha.bookHub.catalog.entity;
+ package com.teamAlpha.bookHub.catalog.entity;
 
 import com.teamAlpha.bookHub.common.entity.Schemas;
 
