@@ -11,12 +11,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
 import com.teamAlpha.bookHub.communication.model.AttachmentStorageProperties;
-=======
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
->>>>>>> adb3c9ddf8aa8b170afefad2c38c539479bbd21e
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,24 +42,8 @@ public class AttachmentService {
 	@Autowired
 	AttachmentRepository attachmentRepository;
 
-<<<<<<< HEAD
-	
-	public void init() {
-		// TODO Auto-generated method stub
-
-		try {
-			Files.createDirectories(path);
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public AttachmentDto saveAttachment(MultipartFile file, Attachment attachment) {
-=======
-	public AttachmentDto saveAttachment(MultipartFile file, Attachment attachment) throws InvalidAttachmentTypeException {
->>>>>>> adb3c9ddf8aa8b170afefad2c38c539479bbd21e
+	public AttachmentDto saveAttachment(MultipartFile file, Attachment attachment)
+			throws InvalidAttachmentTypeException {
 		try {
 			LOGGER.info("Create new attachment with details");
 			path = FileUtils.pathFinders(file, attachment.getAttachmentTypeId());
@@ -112,58 +93,59 @@ public class AttachmentService {
 		}
 	}
 
-	public void downloadAttachment (HttpServletResponse response , Integer attachmentId)throws AttachmentDetailNotFoundException{
+	public void downloadAttachment(HttpServletResponse response, Integer attachmentId)
+			throws AttachmentDetailNotFoundException {
 
-		try{
+		try {
 			AttachmentDto attachmentDto = new AttachmentDto();
 			Attachment attachment = attachmentRepository.findById(attachmentId).get();
-			BeanUtils.copyProperties( attachment,attachmentDto);
+			BeanUtils.copyProperties(attachment, attachmentDto);
 			String path = rootPath.concat("/" + attachment.getAttachmentTypeId() + "/" + attachment.getFileHash());
 
 			File file = new File(path);
 			String[] fileList = file.list();
-			File imagePath = new File(path.concat("/"+fileList[0]));
+			File imagePath = new File(path.concat("/" + fileList[0]));
 
 			String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 			response.setContentType(mimeType);
-			response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + imagePath.getName() + "\""));
+			response.setHeader("Content-Disposition",
+					String.format("attachment; filename=\"" + imagePath.getName() + "\""));
 			response.setContentLength((int) imagePath.length());
 			InputStream inputStream = new BufferedInputStream(new FileInputStream(imagePath));
 			FileCopyUtils.copy(inputStream, response.getOutputStream());
 
-		}catch (Exception e){
+		} catch (Exception e) {
 			throw new AttachmentDetailNotFoundException(attachmentId);
 		}
 
-
 	}
 
-	public void deleteAttachment (Integer attachmentId) throws AttachmentDetailNotFoundException{
+	public void deleteAttachment(Integer attachmentId) throws AttachmentDetailNotFoundException {
 		try {
 
 			AttachmentDto attachmentDto = new AttachmentDto();
 			Attachment attachment = attachmentRepository.findById(attachmentId).get();
-			BeanUtils.copyProperties( attachment,attachmentDto);
+			BeanUtils.copyProperties(attachment, attachmentDto);
 
-			File keyPath = new File(rootPath.concat("/"+ attachment.getAttachmentTypeId()));
+			File keyPath = new File(rootPath.concat("/" + attachment.getAttachmentTypeId()));
 			System.out.println(keyPath);
-			File hashMapPath = new File(rootPath.concat("/"+ attachment.getAttachmentTypeId() + "/"+ attachment.getFileHash()));
+			File hashMapPath = new File(
+					rootPath.concat("/" + attachment.getAttachmentTypeId() + "/" + attachment.getFileHash()));
 
-			if(keyPath.list().length== 0){
+			if (keyPath.list().length == 0) {
 				FileSystemUtils.deleteRecursively(keyPath);
-			}else{
+			} else {
 				FileSystemUtils.deleteRecursively(hashMapPath);
-				if(keyPath.list().length==0){
+				if (keyPath.list().length == 0) {
 					FileSystemUtils.deleteRecursively(keyPath);
 				}
 				attachmentRepository.deleteById(attachmentId);
 
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
 			throw new AttachmentDetailNotFoundException(attachmentId);
 		}
 
 	}
-
 
 }
