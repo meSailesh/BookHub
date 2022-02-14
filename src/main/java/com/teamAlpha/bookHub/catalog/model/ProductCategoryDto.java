@@ -2,13 +2,16 @@ package com.teamAlpha.bookHub.catalog.model;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import java.util.Date;
+
 
 public class ProductCategoryDto extends RepresentationModel <ProductCategoryDto>{
     private Integer categoryId;
     private String categoryName;
     private String description;
     private Integer shopId;
-
+    private Date createdOn;
+    private Date updatedOn;
 
 
     public Integer getCategoryId() {
@@ -43,4 +46,19 @@ public class ProductCategoryDto extends RepresentationModel <ProductCategoryDto>
         this.shopId = shopId;
     }
 
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(Date updatedOn) {
+        this.updatedOn = updatedOn;
+    }
 }

@@ -66,10 +66,6 @@ public class ProductCategoryService {
         ProductCategoryDto productCategoryDto = new ProductCategoryDto();
 
         List<ProductCategory> listCategory = productCategoryRepository.findAll();
-
-//      List type casting
-//        List<ProductCategoryDto> variable = (List<ProductCategoryDto>)(List<?>) listCategory;
-//        System.out.println(variable);
         return listCategory;
     }
 
