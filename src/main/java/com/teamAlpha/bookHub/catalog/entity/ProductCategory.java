@@ -5,12 +5,15 @@ import com.teamAlpha.bookHub.common.entity.Schemas;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,6 +39,13 @@ public class ProductCategory {
     @NotNull
     @Column (name = "shop_id")
     private Integer shopId;
+
+    @CreationTimestamp
+    @Column(name= "created_on")
+    private Date createdOn;
+    @UpdateTimestamp
+    @Column(name = "updated_on")
+    private Date updatedOn;
 
     @JsonIgnore
     @OneToMany(mappedBy = "productCategory")
@@ -81,13 +91,31 @@ public class ProductCategory {
         this.products = products;
     }
 
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(Date updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
     @Override
     public String toString() {
         return "ProductCategory{" +
                 "categoryId=" + categoryId +
                 ", categoryName='" + categoryName + '\'' +
                 ", description='" + description + '\'' +
-                ", shopId=" + shopId+
+                ", shopId=" + shopId +
+                ", createdOn=" + createdOn +
+                ", updatedOn=" + updatedOn +
                 '}';
     }
 }

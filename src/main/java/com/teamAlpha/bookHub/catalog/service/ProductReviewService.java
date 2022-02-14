@@ -5,115 +5,121 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.teamAlpha.bookHub.catalog.controller.ProductCategoryController;
-import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
+import com.teamAlpha.bookHub.catalog.controller.ProductReviewController;
+import com.teamAlpha.bookHub.catalog.entity.Product;
 import com.teamAlpha.bookHub.catalog.entity.ProductReview;
-import com.teamAlpha.bookHub.catalog.exception.ProductCategoryNotFoundException;
-import com.teamAlpha.bookHub.catalog.model.ProductCategoryDto;
+import com.teamAlpha.bookHub.catalog.exception.ProductNotFoundException;
+import com.teamAlpha.bookHub.catalog.exception.ProductReviewNotFoundException;
 import com.teamAlpha.bookHub.catalog.model.ProductReviewDto;
+import com.teamAlpha.bookHub.catalog.repository.ProductRepository;
 import com.teamAlpha.bookHub.catalog.repository.ProductReviewRepository;
 
 @Service
 public class ProductReviewService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProductReviewService.class);
+
 	@Autowired
-	ProductReviewRepository productReviewRepository; 
-	
-	public ProductReviewDto createProductReview(ProductReview productReview) {
-		
-		ProductReviewDto productReviewDto = new ProductReviewDto();
-		ProductReview savedProductReview = productReviewRepository.save(productReview);
-		BeanUtils.copyProperties(productReviewDto, savedProductReview);
-		
-		
+	ProductReviewRepository productReviewRepository;
 
-//		productCategoryDto.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
-//		productCategoryDto.add(linkTo(
-//				methodOn(ProductCategoryController.class).productCategoryDetails(productCategory.getCategoryId()))
-//						.withSelfRel());
-//		
-		return productReviewDto;
-	}
+	@Autowired
+	ProductRepository productRepository;
 
-	public ProductReviewDto productReviewFindById(Integer productReviewId) throws ProductCategoryNotFoundException {
+	public ProductReviewDto saveProductReview(ProductReviewDto productReviewDto) throws ProductNotFoundException {
 		try {
-			
-			ProductReviewDto productReviewDto = new ProductReviewDto(); 
-			ProductReview productById = productReviewRepository.findById(productReviewId).get(); 
-			BeanUtils.copyProperties(productReviewDto, productById);
-		
+			LOGGER.info("creating product review");
 
-			
-//			productCategoryDto
-//					.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
-			
-			return productReviewDto;
+			Product product = productRepository.findById(productReviewDto.getProductId()).get();
+			ProductReview newProductReview = new ProductReview();
+			BeanUtils.copyProperties(product, newProductReview);
+			newProductReview.setProduct(product);
+			ProductReview savedProductReview = productReviewRepository.save(newProductReview);
+			LOGGER.info("product review created");
+			ProductReviewDto savedProductReviewDto = new ProductReviewDto();
+			BeanUtils.copyProperties(savedProductReviewDto, savedProductReview);
+
+			savedProductReviewDto
+					.add(linkTo(methodOn(ProductReviewController.class).getAllProductReview()).withRel("list"));
+			savedProductReviewDto.add(linkTo(
+					methodOn(ProductReviewController.class).findProductReviewById(savedProductReview.getReviewId()))
+							.withSelfRel());
+
+			return savedProductReviewDto;
 
 		} catch (Exception e) {
-			throw new ProductCategoryNotFoundException(productReviewId);
+			LOGGER.error("Error saving product review");
+			throw new ProductNotFoundException(productReviewDto.getProductId());
+		}
+
+	}
+
+	public ProductReviewDto productReviewFindById(Integer productReviewId) throws ProductReviewNotFoundException {
+		try {
+			LOGGER.info("finding product review by id");
+			ProductReviewDto productReviewDto = new ProductReviewDto();
+			ProductReview productReview = productReviewRepository.findById(productReviewId).get();
+			BeanUtils.copyProperties(productReviewDto, productReview);
+
+			productReviewDto.add(linkTo(methodOn(ProductReviewController.class).getAllProductReview()).withRel("list"));
+
+			return productReviewDto;
+
+		} catch (ProductReviewNotFoundException e) {
+			throw new ProductReviewNotFoundException(productReviewId);
 		}
 	}
 
 	public List<ProductReviewDto> getAllProductReview() {
-		
+
 		List<ProductReviewDto> listProductReview = new ArrayList<ProductReviewDto>();
-		List<ProductReview> productReviews = productReviewRepository.findAll(); 
+		List<ProductReview> productReviews = productReviewRepository.findAll();
 		BeanUtils.copyProperties(listProductReview, productReviews);
-		
+
 		return listProductReview;
 	}
 
-	public String deleteProductReviewById(Integer productCategoryId) throws ProductCategoryNotFoundException {
+	public String deleteProductReviewById(Integer productCategoryId) throws ProductReviewNotFoundException {
 
 		try {
-		
+
 			ProductReview deletedReview = productReviewRepository.findById(productCategoryId).get();
-		
+
 			productReviewRepository.deleteById(productCategoryId);
-			
+
 			return ("Successfully deleted product review: " + deletedReview.getReviewMessage());
 
-		} catch (Exception e) {
-			throw new ProductCategoryNotFoundException(productCategoryId);
+		} catch (ProductReviewNotFoundException e) {
+			throw new ProductReviewNotFoundException(productCategoryId);
 		}
 
 	}
 
-//	public ProductReviewDto updateProductCategoryDetails(Integer productCategoryId, ProductCategory productCategory)
-//			throws ProductCategoryNotFoundException {
-//
-//		try {
-//			ProductCategory productCategory1 = productCategoryRepository.findById(productCategoryId).get();
-//			ProductCategoryDto productCategoryDto = new ProductCategoryDto();
-//
-//			if (Objects.nonNull(productCategory.getCategoryName())
-//					&& !"".equalsIgnoreCase(productCategory.getCategoryName())) {
-//				productCategory1.setCategoryName(productCategory.getCategoryName());
-//			}
-//			if (Objects.nonNull(productCategory.getDescription())
-//					&& !"".equalsIgnoreCase(productCategory.getDescription())) {
-//				productCategory1.setDescription(productCategory.getDescription());
-//			}
-//			if (Objects.nonNull(productCategory.getShopId())) {
-//				productCategory1.setShopId(productCategory.getShopId());
-//			}
-//
-//			ProductCategory productCategory2 = productCategoryRepository.save(productCategory1);
-//			BeanUtils.copyProperties(productCategory2, productCategoryDto);
-//			productCategoryDto
-//					.add(linkTo(methodOn(ProductCategoryController.class).GetProductCategory()).withRel("list"));
-//			productCategoryDto.add(linkTo(
-//					methodOn(ProductCategoryController.class).productCategoryDetails(productCategory2.getCategoryId()))
-//							.withSelfRel());
-//			return productCategoryDto;
-//		} catch (Exception e) {
-//			throw new ProductCategoryNotFoundException(productCategoryId);
-//
-//		}
+	public ProductReviewDto updateProductReview(Integer productReviewId, ProductReview productReview) throws ProductReviewNotFoundException {
+
+		try {
+			
+			ProductReview proReview = productReviewRepository.findById(productReviewId).get();
+			ProductReviewDto updatedProductReviewDto = new ProductReviewDto();
+			ProductReview updatedProductReview = productReviewRepository.save(productReview);
+			BeanUtils.copyProperties(updatedProductReviewDto, updatedProductReview);
+			
+			updatedProductReviewDto
+			.add(linkTo(methodOn(ProductReviewController.class).getAllProductReview()).withRel("list"));
+			updatedProductReviewDto.add(linkTo(
+			methodOn(ProductReviewController.class).findProductReviewById(updatedProductReview.getReviewId()))
+					.withSelfRel());
+		
+			return updatedProductReviewDto;
+		} catch (ProductReviewNotFoundException e) {
+			throw new ProductReviewNotFoundException(productReviewId);
+
+		}
+	}
 }

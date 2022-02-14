@@ -21,7 +21,7 @@ public class ProductReview {
 	private Integer reviewId;
 
 	@ManyToOne
-	@JoinColumn(name = "product_id")
+	@JoinColumn(name = "product_review_id", referencedColumnName = "product_id")
 	private Product product;
 
 	@Column(name = "user_id")

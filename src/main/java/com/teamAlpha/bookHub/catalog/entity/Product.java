@@ -2,6 +2,7 @@ package com.teamAlpha.bookHub.catalog.entity;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -15,8 +16,12 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.teamAlpha.bookHub.common.entity.Schemas;
+
 
 @Entity
 @Table(name = "product", schema = Schemas.CATALOG)
@@ -51,6 +56,12 @@ public class Product {
     //name can be anything but ref name should be @Colum name or id
     @JoinColumn(name = "product_category_id", referencedColumnName = "category_id")
     private ProductCategory productCategory;
+    @CreationTimestamp
+    @Column(name= "created_on")
+    private Date createdOn;
+    @UpdateTimestamp
+    @Column(name = "updated_on")
+    private Date updatedOn;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product")
