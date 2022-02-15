@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.teamAlpha.bookHub.communication.exception.InvalidAttachmentTypeException;
@@ -23,8 +24,7 @@ public class FileUtils {
 			Path getPath = Paths.get(path);
 
 			return getPath;
-		}
-		else {
+		} else {
 			throw new InvalidAttachmentTypeException("Please select image type file for attachment.");
 		}
 

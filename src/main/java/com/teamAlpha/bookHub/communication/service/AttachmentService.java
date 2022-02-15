@@ -11,9 +11,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.teamAlpha.bookHub.communication.model.AttachmentStorageProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.teamAlpha.bookHub.communication.model.AttachmentStorageProperties;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,20 +42,8 @@ public class AttachmentService {
 	@Autowired
 	AttachmentRepository attachmentRepository;
 
-
-	public void init() {
-		// TODO Auto-generated method stub
-
-		try {
-			Files.createDirectories(path);
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public AttachmentDto saveAttachment(MultipartFile file, Attachment attachment) throws InvalidAttachmentTypeException {
+	public AttachmentDto saveAttachment(MultipartFile file, Attachment attachment)
+			throws InvalidAttachmentTypeException {
 		try {
 			LOGGER.info("Create new attachment with details");
 			path = FileUtils.pathFinders(file, attachment.getAttachmentTypeId());
@@ -71,7 +59,7 @@ public class AttachmentService {
 			attachmentDto.add(linkTo(methodOn(AttachmentController.class).getAllAttachmentDetails()).withRel("list"));
 			attachmentDto.add(linkTo(
 					methodOn(AttachmentController.class).singleAttchmentDetail(savedAttachment.getAttachmentId()))
-					.withSelfRel());
+							.withSelfRel());
 
 			return attachmentDto;
 
@@ -85,7 +73,6 @@ public class AttachmentService {
 	public List<AttachmentDto> getAllAttachmentDetails() throws AttachmentDetailNotFoundException {
 		List<AttachmentDto> attachmentDtoList = new ArrayList<>();
 		List<Attachment> attachments = attachmentRepository.findAll();
-		System.out.println(attachments);
 		BeanUtils.copyProperties(attachments, attachmentDtoList);
 
 		return attachmentDtoList;
