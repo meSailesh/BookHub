@@ -118,6 +118,22 @@ public class Product {
         this.productCategory = productCategory;
     }
 
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(Date updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -129,6 +145,8 @@ public class Product {
                 ", availableCount=" + availableCount +
                 ", shopId=" + shopId +
                 ", productCategory=" + productCategory +
+                ", createdOn=" + createdOn +
+                ", updatedOn=" + updatedOn +
                 '}';
     }
 }

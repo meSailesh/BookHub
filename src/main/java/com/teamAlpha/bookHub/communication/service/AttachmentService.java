@@ -11,12 +11,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
-import com.teamAlpha.bookHub.communication.model.AttachmentStorageProperties;
-=======
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
->>>>>>> adb3c9ddf8aa8b170afefad2c38c539479bbd21e
+import com.teamAlpha.bookHub.communication.model.AttachmentStorageProperties;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,8 +42,7 @@ public class AttachmentService {
 	@Autowired
 	AttachmentRepository attachmentRepository;
 
-<<<<<<< HEAD
-	
+
 	public void init() {
 		// TODO Auto-generated method stub
 
@@ -59,10 +55,7 @@ public class AttachmentService {
 		}
 	}
 
-	public AttachmentDto saveAttachment(MultipartFile file, Attachment attachment) {
-=======
 	public AttachmentDto saveAttachment(MultipartFile file, Attachment attachment) throws InvalidAttachmentTypeException {
->>>>>>> adb3c9ddf8aa8b170afefad2c38c539479bbd21e
 		try {
 			LOGGER.info("Create new attachment with details");
 			path = FileUtils.pathFinders(file, attachment.getAttachmentTypeId());
@@ -78,7 +71,7 @@ public class AttachmentService {
 			attachmentDto.add(linkTo(methodOn(AttachmentController.class).getAllAttachmentDetails()).withRel("list"));
 			attachmentDto.add(linkTo(
 					methodOn(AttachmentController.class).singleAttchmentDetail(savedAttachment.getAttachmentId()))
-							.withSelfRel());
+					.withSelfRel());
 
 			return attachmentDto;
 
@@ -92,6 +85,7 @@ public class AttachmentService {
 	public List<AttachmentDto> getAllAttachmentDetails() throws AttachmentDetailNotFoundException {
 		List<AttachmentDto> attachmentDtoList = new ArrayList<>();
 		List<Attachment> attachments = attachmentRepository.findAll();
+		System.out.println(attachments);
 		BeanUtils.copyProperties(attachments, attachmentDtoList);
 
 		return attachmentDtoList;
@@ -102,7 +96,7 @@ public class AttachmentService {
 
 			AttachmentDto attachmentDto = new AttachmentDto();
 			Attachment attachment = attachmentRepository.findById(attachmentId).get();
-			BeanUtils.copyProperties(attachmentDto, attachment);
+			BeanUtils.copyProperties(attachment, attachmentDto);
 			attachmentDto.add(linkTo(methodOn(AttachmentController.class).getAllAttachmentDetails()).withRel("list"));
 
 			return attachmentDto;
@@ -112,17 +106,17 @@ public class AttachmentService {
 		}
 	}
 
-	public void downloadAttachment (HttpServletResponse response , Integer attachmentId)throws AttachmentDetailNotFoundException{
-
-		try{
+	public void downloadAttachment(HttpServletResponse response, Integer attachmentId) throws AttachmentDetailNotFoundException {
+		LOGGER.info("Download attachment");
+		try {
 			AttachmentDto attachmentDto = new AttachmentDto();
 			Attachment attachment = attachmentRepository.findById(attachmentId).get();
-			BeanUtils.copyProperties( attachment,attachmentDto);
+			BeanUtils.copyProperties(attachment, attachmentDto);
 			String path = rootPath.concat("/" + attachment.getAttachmentTypeId() + "/" + attachment.getFileHash());
 
 			File file = new File(path);
 			String[] fileList = file.list();
-			File imagePath = new File(path.concat("/"+fileList[0]));
+			File imagePath = new File(path.concat("/" + fileList[0]));
 
 			String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 			response.setContentType(mimeType);
@@ -130,40 +124,45 @@ public class AttachmentService {
 			response.setContentLength((int) imagePath.length());
 			InputStream inputStream = new BufferedInputStream(new FileInputStream(imagePath));
 			FileCopyUtils.copy(inputStream, response.getOutputStream());
+			LOGGER.info("Successfully downloaded attachment");
 
-		}catch (Exception e){
+		} catch (Exception e) {
+			LOGGER.error("Cannot find attachment Id: {} in database", attachmentId);
 			throw new AttachmentDetailNotFoundException(attachmentId);
 		}
 
 
 	}
 
-	public void deleteAttachment (Integer attachmentId) throws AttachmentDetailNotFoundException{
+	public void deleteAttachment(Integer attachmentId) throws AttachmentDetailNotFoundException {
+		LOGGER.info("Delete File and if folder is empty delete folder also");
 		try {
 
 			AttachmentDto attachmentDto = new AttachmentDto();
 			Attachment attachment = attachmentRepository.findById(attachmentId).get();
-			BeanUtils.copyProperties( attachment,attachmentDto);
+			BeanUtils.copyProperties(attachment, attachmentDto);
 
-			File keyPath = new File(rootPath.concat("/"+ attachment.getAttachmentTypeId()));
+			File keyPath = new File(rootPath.concat("/" + attachment.getAttachmentTypeId()));
 			System.out.println(keyPath);
-			File hashMapPath = new File(rootPath.concat("/"+ attachment.getAttachmentTypeId() + "/"+ attachment.getFileHash()));
+			File hashMapPath = new File(rootPath.concat("/" + attachment.getAttachmentTypeId() + "/" + attachment.getFileHash()));
 
-			if(keyPath.list().length== 0){
+			if (keyPath.list().length == 0) {
 				FileSystemUtils.deleteRecursively(keyPath);
-			}else{
+			} else {
 				FileSystemUtils.deleteRecursively(hashMapPath);
-				if(keyPath.list().length==0){
+				LOGGER.info("Successfully delete local file");
+				if (keyPath.list().length == 0) {
 					FileSystemUtils.deleteRecursively(keyPath);
+					LOGGER.info("Successfully delete empty local folder");
 				}
 				attachmentRepository.deleteById(attachmentId);
+				LOGGER.info("Successfully delete attachment of Id: {} from database", attachmentId );
 
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
+			LOGGER.error("Cannot find attachment id {} in database or file not found in locally", attachmentId);
 			throw new AttachmentDetailNotFoundException(attachmentId);
 		}
-
 	}
-
-
 }
+

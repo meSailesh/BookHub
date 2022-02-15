@@ -56,14 +56,15 @@ public class AttachmentController {
     }
 
 	@GetMapping("/{id}/download")
-	public void downloadAttachment(HttpServletResponse response, @PathVariable("id") Integer attachmentId){
+	public ResponseEntity<?>downloadAttachment(HttpServletResponse response, @PathVariable("id") Integer attachmentId){
 		attachmentService.downloadAttachment(response, attachmentId);
-//		return new ResponseEntity<Object>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}/delete")
-	public void deleteAttachment(@PathVariable("id") Integer attachmentId){
+	public ResponseEntity<?> deleteAttachment(@PathVariable("id") Integer attachmentId){
 		attachmentService.deleteAttachment(attachmentId);
+		return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted file");
 	}
 
 }

@@ -44,12 +44,6 @@ public class FileUtils {
 		return false;
 	}
 
-	public void deleteEmptyDir(File file)
-	{
-		file.delete();
-		System.out.println("Directory is deleted : " + file.getAbsolutePath());
-	}
-
 
 
 }

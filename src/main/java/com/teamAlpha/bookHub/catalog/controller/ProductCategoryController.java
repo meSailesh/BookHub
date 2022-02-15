@@ -39,8 +39,9 @@ public class ProductCategoryController {
     }
 
     @DeleteMapping(path = "/{id}/delete")
-    public String deleteProductCategory(@PathVariable("id") Integer productCategoryId) {
-        return productCategoryService.deleteProductCategory(productCategoryId);
+    public ResponseEntity<?> deleteProductCategory(@PathVariable("id") Integer productCategoryId) {
+        return new ResponseEntity<>(productCategoryService.deleteProductCategory(productCategoryId), HttpStatus.OK);
+
     }
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> productCategoryDetails(@PathVariable("id") Integer productCategoryId) {

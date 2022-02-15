@@ -1,8 +1,10 @@
 package com.teamAlpha.bookHub.catalog.service;
 
 import com.teamAlpha.bookHub.catalog.controller.ProductCategoryController;
+import com.teamAlpha.bookHub.catalog.controller.ProductController;
 import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
 import com.teamAlpha.bookHub.catalog.exception.ProductCategoryNotFoundException;
+import com.teamAlpha.bookHub.catalog.model.DeleteMessage;
 import com.teamAlpha.bookHub.catalog.model.ProductCategoryDto;
 import com.teamAlpha.bookHub.catalog.repository.ProductCategoryRepository;
 import org.slf4j.Logger;
@@ -85,14 +87,17 @@ public class ProductCategoryService {
 
     }
 
-    public String deleteProductCategory(Integer productCategoryId) throws ProductCategoryNotFoundException {
+    public DeleteMessage deleteProductCategory(Integer productCategoryId) throws ProductCategoryNotFoundException {
 
         try{
             logger.info("Deleting category by id");
+            DeleteMessage deleteMessage = new DeleteMessage();
             productCategoryRepository.findById(productCategoryId).get();
             productCategoryRepository.deleteById(productCategoryId);
             logger.info("Successfully delete category id: {}", productCategoryId);
-            return("Successfully delete product category" + productCategoryId + " Id ");
+            deleteMessage.setMessage("Product of id "+ productCategoryId + " is deleted from database");
+            deleteMessage.add(linkTo(methodOn(ProductCategoryController.class).listCategory()).withRel("list"));
+            return(deleteMessage);
 
         }catch (Exception e){
             logger.error("Cannot find category id {}", productCategoryId);
