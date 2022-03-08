@@ -2,13 +2,10 @@ package com.teamAlpha.bookHub.communication.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.teamAlpha.bookHub.catalog.entity.Product;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -39,6 +36,9 @@ public class Attachment {
 
 	@Column(name = "file_hash")
 	private String fileHash;
+	@JsonIgnore
+	@OneToOne(mappedBy = "attachment")
+	private Product product;
 
 	public Integer getAttachmentId() {
 		return attachmentId;
@@ -86,6 +86,14 @@ public class Attachment {
 
 	public void setFileHash(String fileHash) {
 		this.fileHash = fileHash;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
 	@Override

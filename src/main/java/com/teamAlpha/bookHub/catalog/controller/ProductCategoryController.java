@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/v1/category")
 public class ProductCategoryController {
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/v1/product")
 public class ProductController {
 
@@ -37,6 +38,11 @@ public class ProductController {
     @GetMapping(path = "/list")
     public ResponseEntity<?> getAllProduct(){
         return new ResponseEntity<>(productService.getAllProduct(), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/lists")
+    public ResponseEntity<?> getAllProductPagination(@RequestParam(defaultValue = "1", name = "page") Integer page, @RequestParam(defaultValue = "5", name = "size") Integer size){
+        return new ResponseEntity<>(productService.getAllProductPagination(page, size), HttpStatus.OK);
     }
 
     @PutMapping(path = "/{id}/update")

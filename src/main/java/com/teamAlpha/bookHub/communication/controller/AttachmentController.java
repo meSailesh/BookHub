@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ import com.teamAlpha.bookHub.communication.service.AttachmentService;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/attachments")
 public class AttachmentController {
 
@@ -54,7 +56,6 @@ public class AttachmentController {
 		}
         
     }
-
 	@GetMapping("/{id}/download")
 	public ResponseEntity<?>downloadAttachment(HttpServletResponse response, @PathVariable("id") Integer attachmentId){
 		attachmentService.downloadAttachment(response, attachmentId);
@@ -66,5 +67,13 @@ public class AttachmentController {
 		attachmentService.deleteAttachment(attachmentId);
 		return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted file");
 	}
+
+	@GetMapping(value = "/{id}/imageView",
+	produces = {MediaType.IMAGE_JPEG_VALUE,MediaType.IMAGE_GIF_VALUE,MediaType.IMAGE_PNG_VALUE}
+	)
+	public @ResponseBody byte[] getImageWithMediaType(@PathVariable("id") Integer attachmentId) {
+		return attachmentService.getImageWithmediaType(attachmentId);
+	}
+
 
 }

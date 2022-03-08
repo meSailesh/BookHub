@@ -8,10 +8,13 @@ import java.io.File;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.teamAlpha.bookHub.communication.model.AttachmentStorageProperties;
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -117,9 +120,9 @@ public class AttachmentService {
 			LOGGER.error("Cannot find attachment Id: {} in database", attachmentId);
 			throw new AttachmentDetailNotFoundException(attachmentId);
 		}
-
-
 	}
+
+
 
 	public void deleteAttachment(Integer attachmentId) throws AttachmentDetailNotFoundException {
 		LOGGER.info("Delete File and if folder is empty delete folder also");
@@ -150,6 +153,28 @@ public class AttachmentService {
 			LOGGER.error("Cannot find attachment id {} in database or file not found in locally", attachmentId);
 			throw new AttachmentDetailNotFoundException(attachmentId);
 		}
+	}
+
+	public byte[] getImageWithmediaType(Integer attachmentId) throws AttachmentDetailNotFoundException{
+		try{
+			AttachmentDto attachmentDto = new AttachmentDto();
+			Attachment attachment = attachmentRepository.findById(attachmentId).get();
+			BeanUtils.copyProperties(attachment, attachmentDto);
+			String path = rootPath.concat("/" + attachment.getAttachmentTypeId() + "/" + attachment.getFileHash());
+
+			File file = new File(path);
+			String[] fileList = file.list();
+			File imagePath = new File(path.concat("/" + fileList[0]));
+
+			Path imageUrl = Paths.get(String.valueOf(imagePath));
+			System.out.println(imageUrl);
+			return IOUtils.toByteArray(imageUrl.toUri());
+
+		}catch (Exception e) {
+			LOGGER.error("Cannot find attachment id {} in database or file not found in locally", attachmentId);
+			throw new AttachmentDetailNotFoundException(attachmentId);
+		}
+
 	}
 }
 

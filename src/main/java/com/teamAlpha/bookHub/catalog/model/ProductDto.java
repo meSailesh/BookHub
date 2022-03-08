@@ -2,6 +2,7 @@ package com.teamAlpha.bookHub.catalog.model;
 
 import com.teamAlpha.bookHub.catalog.entity.Product;
 import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
+import com.teamAlpha.bookHub.communication.entity.Attachment;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Date;
@@ -13,6 +14,7 @@ public class ProductDto extends RepresentationModel <ProductDto>{
     private String description;
     private Integer price;
     private Integer imageId;
+    private Attachment attachment;
     private Integer availableCount;
     private Integer shopId;
     private Integer productCategoryId;
@@ -91,6 +93,14 @@ public class ProductDto extends RepresentationModel <ProductDto>{
         this.productCategory = productCategory;
     }
 
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
+
     public Date getCreatedOn() {
         return createdOn;
     }
@@ -118,7 +128,6 @@ public class ProductDto extends RepresentationModel <ProductDto>{
                 ", availableCount=" + availableCount +
                 ", shopId=" + shopId +
                 ", productCategoryId=" + productCategoryId +
-                ", productCategory=" + productCategory +
                 ", createdOn=" + createdOn +
                 ", updatedOn=" + updatedOn +
                 '}';
