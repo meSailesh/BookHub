@@ -1,10 +1,15 @@
 package com.teamAlpha.bookHub.catalog.entity;
 
 import com.teamAlpha.bookHub.common.entity.Schemas;
+import com.teamAlpha.bookHub.communication.entity.Attachment;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import java.util.Date;
 
 import static javax.persistence.GenerationType.*;
 
@@ -26,8 +31,9 @@ public class Product {
     @Column(name = "price")
     private Integer price;
     @NotNull
-    @Column(name = "image_id")
-    private Integer imageId;
+    @OneToOne()
+    @JoinColumn(name = "image_id", referencedColumnName = "a_id")
+    private Attachment attachment;
     @NotNull
     @Column(name = "available_count")
     private Integer availableCount;
@@ -41,6 +47,12 @@ public class Product {
     //name can be anything but ref name should be @Colum name or id
     @JoinColumn(name = "product_category_id", referencedColumnName = "category_id")
     private ProductCategory productCategory;
+    @CreationTimestamp
+    @Column(name= "created_on")
+    private Date createdOn;
+    @UpdateTimestamp
+    @Column(name = "updated_on")
+    private Date updatedOn;
 
 
     public ProductCategory getProductCategory() {
@@ -80,13 +92,14 @@ public class Product {
         this.price = price;
     }
 
-    public Integer getImageId() {
-        return imageId;
+    public Attachment getAttachment() {
+        return attachment;
     }
 
-    public void setImageId(Integer imageId) {
-        this.imageId = imageId;
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
+
 
     public Integer getAvailableCount() {
         return availableCount;
@@ -108,6 +121,22 @@ public class Product {
         this.productCategory = productCategory;
     }
 
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(Date updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -115,10 +144,12 @@ public class Product {
                 ", productName='" + productName + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
-                ", imageId=" + imageId +
+                ", attachment=" + attachment +
                 ", availableCount=" + availableCount +
                 ", shopId=" + shopId +
                 ", productCategory=" + productCategory +
+                ", createdOn=" + createdOn +
+                ", updatedOn=" + updatedOn +
                 '}';
     }
 }

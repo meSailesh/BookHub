@@ -4,20 +4,20 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.teamAlpha.bookHub.communication.entity.Attachment;
+import com.teamAlpha.bookHub.communication.exception.AttachmentDetailNotFoundException;
 import com.teamAlpha.bookHub.communication.model.AttachmentDto;
 import com.teamAlpha.bookHub.communication.service.AttachmentService;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
+@CrossOrigin
 @RequestMapping("api/v1/attachments")
 public class AttachmentController {
 
@@ -37,19 +37,43 @@ public class AttachmentController {
 
 	@GetMapping("/list")
 	public ResponseEntity<List<AttachmentDto>> getAllAttachmentDetails() {
-		List<AttachmentDto> attachments = attachmentService.getAllAttachmentDetails();
-
-		if (attachments.size() <= 0) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		}
-
-		return ResponseEntity.status(HttpStatus.OK).body(attachments);
+		try {
+			List<AttachmentDto> attachments = attachmentService.getAllAttachmentDetails();
+			return ResponseEntity.status(HttpStatus.OK).body(attachments);
+		} catch (AttachmentDetailNotFoundException e) {
+			throw new AttachmentDetailNotFoundException("No attachment details record found");
+					
+		}		
 	}
 	
 	@GetMapping("/{id}")
     public ResponseEntity<AttachmentDto> singleAttchmentDetail(@PathVariable("id") Integer attachmentId) {
-        AttachmentDto attachment = attachmentService.singleAttachmentDetail(attachmentId);     
-		return ResponseEntity.status(HttpStatus.OK).body(attachment);
+		try {
+			AttachmentDto attachment = attachmentService.singleAttachmentDetail(attachmentId);     
+			return ResponseEntity.status(HttpStatus.OK).body(attachment);
+		} catch (AttachmentDetailNotFoundException e) {
+			throw new AttachmentDetailNotFoundException(attachmentId);
+		}
+        
     }
+	@GetMapping("/{id}/download")
+	public ResponseEntity<?>downloadAttachment(HttpServletResponse response, @PathVariable("id") Integer attachmentId){
+		attachmentService.downloadAttachment(response, attachmentId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{id}/delete")
+	public ResponseEntity<?> deleteAttachment(@PathVariable("id") Integer attachmentId){
+		attachmentService.deleteAttachment(attachmentId);
+		return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted file");
+	}
+
+	@GetMapping(value = "/{id}/imageView",
+	produces = {MediaType.IMAGE_JPEG_VALUE,MediaType.IMAGE_GIF_VALUE,MediaType.IMAGE_PNG_VALUE}
+	)
+	public @ResponseBody byte[] getImageWithMediaType(@PathVariable("id") Integer attachmentId) {
+		return attachmentService.getImageWithmediaType(attachmentId);
+	}
+
 
 }

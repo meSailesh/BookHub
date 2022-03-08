@@ -9,10 +9,15 @@ import com.teamAlpha.bookHub.catalog.model.DeleteMessage;
 import com.teamAlpha.bookHub.catalog.model.ProductDto;
 import com.teamAlpha.bookHub.catalog.repository.ProductCategoryRepository;
 import com.teamAlpha.bookHub.catalog.repository.ProductRepository;
+import com.teamAlpha.bookHub.communication.entity.Attachment;
+import com.teamAlpha.bookHub.communication.repository.AttachmentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
@@ -34,6 +39,8 @@ public class ProductService {
     ProductRepository productRepository;
     @Autowired
     ProductCategoryRepository productCategoryRepository;
+    @Autowired
+    AttachmentRepository attachmentRepository;
 
     public ProductDto productDetails (Integer productId)throws ProductNotFoundException {
         logger.info("Get detail of product");
@@ -54,11 +61,14 @@ public class ProductService {
     public ProductDto createProduct (ProductDto productDto) throws ProductCategoryNotFoundException, ProductCategoryNotFoundException {
         logger.info("Creat product");
         try{
-
             ProductCategory productCategory = productCategoryRepository.findById(productDto.getProductCategoryId()).get();
+            Attachment attachment = attachmentRepository.findById(productDto.getImageId()).get();
+            System.out.println(attachment);
+            System.out.println(productCategory);
             Product product = new Product();
             BeanUtils.copyProperties(productDto, product);
             product.setProductCategory(productCategory);
+            product.setAttachment(attachment);
             Product product1 = productRepository.save(product);
             logger.info("Product created successfully.");
             ProductDto productDto1 = new ProductDto();
@@ -92,6 +102,7 @@ public class ProductService {
 
 
     public CollectionModel<EntityModel<Product>> getAllProduct (){
+        logger.info("Finding all products");
         List<EntityModel<Product>> productList = productRepository.findAll().stream()
                 .map(category -> EntityModel.of(category,
                         linkTo(methodOn(ProductController.class).getProductDetail(category.getProductId())).withRel("product Details") ,
@@ -100,6 +111,19 @@ public class ProductService {
                 .collect(toList());
         logger.info("Show all product list");
         return CollectionModel.of(productList);
+    }
+    public Page<Product> getAllProductPagination (Integer page, Integer size){
+//        Integer pageno;
+//        if (page<=0 ){
+//            pageno = 0;
+//
+//        }else {
+//            pageno = page - 1;
+//        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> product = productRepository.findAllBy(pageable);
+        logger.info("Show all product list");
+        return product;
     }
 
 

@@ -2,7 +2,10 @@ package com.teamAlpha.bookHub.catalog.model;
 
 import com.teamAlpha.bookHub.catalog.entity.Product;
 import com.teamAlpha.bookHub.catalog.entity.ProductCategory;
+import com.teamAlpha.bookHub.communication.entity.Attachment;
 import org.springframework.hateoas.RepresentationModel;
+
+import java.util.Date;
 
 public class ProductDto extends RepresentationModel <ProductDto>{
 
@@ -11,10 +14,13 @@ public class ProductDto extends RepresentationModel <ProductDto>{
     private String description;
     private Integer price;
     private Integer imageId;
+    private Attachment attachment;
     private Integer availableCount;
     private Integer shopId;
     private Integer productCategoryId;
     private ProductCategory productCategory;
+    private Date createdOn;
+    private Date updatedOn;
 
     public Integer getProductId() {
         return productId;
@@ -87,6 +93,30 @@ public class ProductDto extends RepresentationModel <ProductDto>{
         this.productCategory = productCategory;
     }
 
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
+
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public Date getUpdatedOn() {
+        return updatedOn;
+    }
+
+    public void setUpdatedOn(Date updatedOn) {
+        this.updatedOn = updatedOn;
+    }
+
     @Override
     public String toString() {
         return "ProductDto{" +
@@ -98,6 +128,8 @@ public class ProductDto extends RepresentationModel <ProductDto>{
                 ", availableCount=" + availableCount +
                 ", shopId=" + shopId +
                 ", productCategoryId=" + productCategoryId +
+                ", createdOn=" + createdOn +
+                ", updatedOn=" + updatedOn +
                 '}';
     }
 }

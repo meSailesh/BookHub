@@ -12,6 +12,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping(path = "api/v1/category")
 public class ProductCategoryController {
 
@@ -39,8 +40,9 @@ public class ProductCategoryController {
     }
 
     @DeleteMapping(path = "/{id}/delete")
-    public String deleteProductCategory(@PathVariable("id") Integer productCategoryId) {
-        return productCategoryService.deleteProductCategory(productCategoryId);
+    public ResponseEntity<?> deleteProductCategory(@PathVariable("id") Integer productCategoryId) {
+        return new ResponseEntity<>(productCategoryService.deleteProductCategory(productCategoryId), HttpStatus.OK);
+
     }
     @GetMapping(path = "/{id}")
     public ResponseEntity<?> productCategoryDetails(@PathVariable("id") Integer productCategoryId) {

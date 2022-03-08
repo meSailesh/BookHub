@@ -8,4 +8,5 @@ import com.teamAlpha.bookHub.communication.entity.Attachment;
 @Repository
 public interface AttachmentRepository extends JpaRepository<Attachment, Integer> {
 
+
 }
